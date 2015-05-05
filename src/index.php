@@ -12,7 +12,7 @@
 
 <link href="css/style.css" rel="stylesheet">
 
-<script src="js/home.js"></script>
+<script src="js/index.js"></script>
 
 <title>Block Toss - Created by Matthew Chan</title>
 
@@ -20,6 +20,7 @@
 
 <body>
 	<?php
+		// if user is already logged in, redirect them to the game page
 		session_start();
 		if ($_SESSION != null) {
 			header('Location: game.php');

@@ -1,7 +1,6 @@
 $(document).ready(function() {
-
 	// bring the input form to the (near) vertical center of the document
-	var docHeight = $(document).height();
+	var docHeight = $(document).height();	
 	$('#playerNameInput').css({
 		'position': 'relative',
 		'top': (docHeight / 2 - 150) + 'px'
@@ -27,8 +26,6 @@ function loginPlayer(obj, name) {
 			playerName: name
 		},
 		success: function(data) {
-			console.log("returned: " + data);
-
 			// some special effect after logging in
 			// upon finishing the animation, redirect user to the next page
 			var deferred = $.Deferred();

@@ -12,12 +12,15 @@
 
 <link href="css/style.css" rel="stylesheet">
 
+<script src="js/game.js"></script>
+
 <title>Block Toss - Created by Matthew Chan</title>
 
 </head>
 
 <body>
 	<?php
+		// if user isn't logged in, redirect them back to the index page
 		session_start();
 		if ($_SESSION == null) {
 			header('Location: /');
@@ -25,9 +28,15 @@
 		}
 	?>
 
-	<div id="wrapper"> <!-- ultimate wrapper dictating the font family, size, background color, etc. -->
+	<div id="wrapper" class="game-wrapper"> <!-- ultimate wrapper dictating the font family, size, background color, etc. -->
 
-	
+	<div id="game" class="col-xs-6 col-xs-offset-3">
+		<canvas height="540"></canvas>
+	</div>
+
+	<div id="logout">
+		<a href="logout.php">Log Out</a>
+	</div>
 
 	</div>
 </body>
