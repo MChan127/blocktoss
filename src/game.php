@@ -12,22 +12,22 @@
 
 <link href="css/style.css" rel="stylesheet">
 
-<script src="js/home.js"></script>
-
 <title>Block Toss - Created by Matthew Chan</title>
 
 </head>
 
 <body>
+	<?php
+		session_start();
+		if ($_SESSION == null) {
+			header('Location: /');
+			die();
+		}
+	?>
+
 	<div id="wrapper"> <!-- ultimate wrapper dictating the font family, size, background color, etc. -->
 
-	<div id="playerNameInput">
-		<div class="form-group col-xs-8 col-xs-offset-2">
-			Enter a Player Name >>&nbsp;&nbsp;
-			<input id="playerName" type="text">&nbsp;&nbsp;
-			<button id="submitPlayerName" type="button" class="btn btn-default">OK!</button>
-		</div>
-	</div>
+	
 
 	</div>
 </body>

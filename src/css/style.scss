@@ -15,30 +15,39 @@ $font-size: 16px;
 }
 
 #playerNameInput {
+	position: relative;
 	height: 225px;
 
 	display: -ms-flexbox;
 
+	display: -webkit-flex;
+
 	display: flex;
 	-ms-flex-align: center;
-	    align-items: center;
+	    -webkit-align-items: center;
+	        align-items: center;
 
-	border-top: 2px solid #fff;
-	border-bottom: 2px solid #fff;
+	border-top: 5px solid #fff;
+	border-bottom: 5px solid #fff;
 	background-color: #31475A;
 
 	font-weight: 600;
 	font-size: 28px;
 	color: #fff;
+
+	transition: all 0.8s;
 }
 
 #playerNameInput > div {
 	display: -ms-flexbox;
+	display: -webkit-flex;
 	display: flex;
 	-ms-flex-pack: center;
-	    justify-content: center;
+	    -webkit-justify-content: center;
+	        justify-content: center;
 	-ms-flex-align: center;
-	    align-items: center;
+	    -webkit-align-items: center;
+	        align-items: center;
 }
 
 #playerNameInput > div > input {

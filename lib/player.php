@@ -2,7 +2,9 @@
 // include the database object
 include('connectdb.php');
 
-class loggedInPlayer {
+// represents a logged in player
+// contains the player's name, id, and in-game preferences
+class Player {
 	private $playerName;
 	private $playerId; // create new or return existing from db
 
