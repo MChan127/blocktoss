@@ -28,11 +28,14 @@ class loggedInPlayer {
 	private function createPlayerRow() {
 		global $db;
 
-		$insert_query = $db->prepare("INSERT INTO players (name) VALUES (:name) RETURNING id;");
-		$insert_query->execute(array('name' => $playerName));
-		$rows = $insert_query->fetchAll();
+		$insert_query = $db->prepare("INSERT INTO players (name) VALUES (:name);");
+		$insert_query->execute(array('name' => $this->playerName));
+		
+		$get_last_id = $db->prepare("SELECT LAST_INSERT_ID();");
+		$get_last_id->execute();
+		$rows = $get_last_id->fetchAll();
 
-		return $rows[0]['id'];
+		return $rows[0][0];
 	}
 
 	public function __construct($name) {
