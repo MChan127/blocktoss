@@ -1,0 +1,10 @@
+lib/config.php
+src/components/
+node_modules/
+build/
+.idea/
+_SpecRunner.html
+.grunt/
+errout.log
+stdout.log
+npm-debug.log

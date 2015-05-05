@@ -1,0 +1,49 @@
+$font-family: Calibri, serif;
+$font-size: 16px;
+
+#wrapper {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+
+	background-image: url('./../img/background.jpg');
+
+	font-family: $font-family;
+	font-size: $font-size;
+}
+
+#playerNameInput {
+	height: 225px;
+
+	display: -ms-flexbox;
+
+	display: flex;
+	-ms-flex-align: center;
+	    align-items: center;
+
+	border-top: 2px solid #fff;
+	border-bottom: 2px solid #fff;
+	background-color: #31475A;
+
+	font-weight: 600;
+	font-size: 28px;
+	color: #fff;
+}
+
+#playerNameInput > div {
+	display: -ms-flexbox;
+	display: flex;
+	-ms-flex-pack: center;
+	    justify-content: center;
+	-ms-flex-align: center;
+	    align-items: center;
+}
+
+#playerNameInput > div > input {
+	width: 300px;
+	padding: 0 5px 0 5px;
+
+	color: #000;
+}

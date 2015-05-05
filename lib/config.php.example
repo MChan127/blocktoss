@@ -1,0 +1,3 @@
+<?php
+$db_username = 'your username here';
+$db_password = 'your password here';
