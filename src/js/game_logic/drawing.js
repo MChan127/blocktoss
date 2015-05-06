@@ -24,17 +24,57 @@ define([], function() {
 
 		// must call this method to place the drawing on the canvas
 		// can also be used to create multiple instances of a drawing with the same image
-		this.init = function(renderer, context, x, y) {
+		this.init = function(renderer, context, x, y, width, height) {
 			this.x = x;
 			this.y = y;
+			if (width != undefined && height != undefined) {
+				this.width = width;
+				this.height = height;
+			}
 			this.context = context;
 
 			// add the drawing to the renderer array on this context (canvas layer)
 			renderer.newDrawing(this);
+
 			// set redraw since we have a new drawing
 			// only redraws for the relevant context
 			renderer.setRedraw(this.context, true);
 		}
+
+		/** START | special functions for animating the drawing **/
+		// an animation can be added or removed at any time
+		// user can specify a rate of 'frame' traversal in the form of
+		// the 'delay' parameter
+		this.images = null;
+		this.delay = null;
+		this.animation = null; // set to the interval object
+		this.frame = 0;
+		this.addAnimation = function(renderer, images, delay) {
+			this.images = images;
+			this.delay = delay;
+			this.frame = 0;
+			this.animate(this, renderer);
+		}
+		this.animate = function(scope, renderer) {
+			scope.animation = setInterval(function() {
+				scope.img = scope.images[scope.frame++];
+				renderer.setRedraw(scope.context, true);
+				if (scope.frame >= scope.images.length) {
+					scope.frame = 0;
+				}
+			}, scope.delay);
+		}
+		this.removeAnimation = function(renderer, img) {
+			clearInterval(this.animation);
+			// optionally, assign this drawing to a new image
+			// after stopping the animation
+			// else it will be assigned to the original
+			if (img) {
+				this.img = img;
+			}
+			renderer.setRedraw(this.context, true);
+		}
+		/** END | special functions for animating the drawing **/
 
 		// shows/hides the drawing from the canvas
 		this.toggleHide = function() {

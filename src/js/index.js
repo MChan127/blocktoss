@@ -8,12 +8,15 @@ $(document).ready(function() {
 
 	$('#playerNameInput').bind('keypress', function(e) {
 		if (e.which == 13) {
-			loginPlayer($(this), $('#playerName').val());		
+			loginPlayer($(this), $('#playerName').val());	
+			$(this).unbind(e);
 		}
 	});
 
 	$('#submitPlayerName').bind('click', function() {
+		console.log("test");
 		loginPlayer($('#playerNameInput'), $('#playerName').val().trim());
+		$(this).unbind();
 	});
 });
 

@@ -22,7 +22,7 @@ $(document).ready(function() {
     var ctx_fg = fg_canvas.getContext("2d");
 
     // represents the speed at which the canvases are redrawn
-	var delay = 30;
+	var delay = 10;
 
 	// initialize the game logic
     deferred.done(function() {
