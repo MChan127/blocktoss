@@ -77,7 +77,7 @@ define([], function() {
 		/** END | special functions for animating the drawing **/
 
 		// shows/hides the drawing from the canvas
-		this.toggleHide = function() {
+		this.toggleHide = function(renderer) {
 			if (this.hide == false) {
 				this.hide = true;
 			} else {

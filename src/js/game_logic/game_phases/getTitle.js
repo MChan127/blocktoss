@@ -1,5 +1,10 @@
-define(['game_logic/renderer', 'game_logic/drawing'], function(Renderer, Drawing) {
+define(['game_logic/drawing'], function(Drawing) {
 	var getTitle = function() {
+			this.press_start = null; // for use later, since it flashes for a few seconds
+									 // upon user selection before the game starts
+
+			listenUserInput(this);
+
 			// make the title and menu options here
 			// start playing the music
 			// ^ call other modules for this
@@ -22,8 +27,8 @@ define(['game_logic/renderer', 'game_logic/drawing'], function(Renderer, Drawing
     		title.init(this.renderer, ctx_fg, 
     			(ctx_fg.canvas.width/2) - (this.images['title.png'].width/2),
     			75);
-    		var press_start = new Drawing('press_start', this.images['press_start.png']);
-    		press_start.init(this.renderer, ctx_fg, 
+    		this.press_start = new Drawing('press_start', this.images['press_start.png']);
+    		this.press_start.init(this.renderer, ctx_fg, 
     			(ctx_fg.canvas.width/2) - (this.images['press_start.png'].width/2-20),
     			350);
 
@@ -31,7 +36,7 @@ define(['game_logic/renderer', 'game_logic/drawing'], function(Renderer, Drawing
     		var start_arrow = new Drawing('start_arrow', this.images['start_arrow.png']);
 
     		// set arrow position and size based on other fetched properties
-    		var arrow_pos = press_start.getPosition().x - 65;
+    		var arrow_pos = this.press_start.getPosition().x - 65;
     		var arrow_size = start_arrow.getSize();
     		var new_arrow_width = arrow_size.width * 0.8;
     		var new_arrow_height = arrow_size.height * 0.8;
@@ -59,15 +64,30 @@ define(['game_logic/renderer', 'game_logic/drawing'], function(Renderer, Drawing
     				this.images['start_arrow4.png'],
     				this.images['start_arrow3.png'],
     				this.images['start_arrow2.png'],
-    			], 35);
+    			], 30);
 
 			// listen for user input
-			$(window).bind('keypress', function(e) {
-				if (e.which == 32) {
-					console.log("game started");
-					$(this).unbind(e);
+			function listenUserInput(scope) {
+				$(window).bind('keypress', function(e) {
+					if (e.which == 32) {
+						$(this).unbind(e);
+
+						setTimeout(function() {
+							clearScreen(flashing);
+						}, 2000);
+
+						var flashing = setInterval(function() {
+							scope.press_start.toggleHide(scope.renderer);
+						}, 120);
+					}
+				});
+
+				function clearScreen(interval) {
+					clearInterval(interval);
+
+					scope.renderer.clearContexts([scope.contexts[1]]);
 				}
-			});
+			}
 		}
 
 	return getTitle;

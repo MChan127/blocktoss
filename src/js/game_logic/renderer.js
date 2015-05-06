@@ -79,6 +79,17 @@ define([], function() {
 				context.restore();
 			}
 		}
+
+		// remove all drawings from one or more contexts, then redraw
+		// usually called when transitioning from one game phase to another
+		this.clearContexts = function(contexts) {
+			for (var i in contexts) {
+				var canvasId = contexts[i].canvas.getAttribute('id');
+
+				this.drawings[canvasId].splice(0, this.drawings[canvasId].length);
+				this.setRedraw(contexts[i], true);
+			}
+		}
 	};
 
 	return renderer;
