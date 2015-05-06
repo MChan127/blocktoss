@@ -13,18 +13,23 @@ $(document).ready(function() {
 		deferred.resolve();
 	});
 
+	// create contexts for the canvases here
+	// each canvas represents a different layer of graphics in the game
+	// eventually they are passed onto the game logic modules so that the render may use them
 	var bg_canvas = document.getElementById("game-background");
-    var bg_ctx = bg_canvas.getContext("2d");
+    var ctx_bg = bg_canvas.getContext("2d");
     var fg_canvas = document.getElementById("game-foreground");
-    var fg_ctx = fg_canvas.getContext("2d");
+    var ctx_fg = fg_canvas.getContext("2d");
 
-    var img = new Image();
-    img.src = "../img/game_graphics/space_bg.png";
-    bg_ctx.drawImage(img, 0, 0);
+    // represents the speed at which the canvases are redrawn
+	var delay = 30;
 
+	// initialize the game logic
     deferred.done(function() {
-    	require(['game_logic/phases'], function(phases) {
-    		phases.getTitle();
+    	require(['game_logic/main'], function(main) {
+    		// order of contexts in the array matters, because
+    		// contexts are updated in order from left to right
+    		main.initGame([ctx_bg, ctx_fg], delay);
     	});
     });
 });

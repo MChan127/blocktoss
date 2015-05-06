@@ -12,7 +12,7 @@ body {
 	left: 0;
 	right: 0;
 
-	background-image: url('./../img/background.jpg');
+	background-image: url('./../images/background.jpg');
 
 	font-family: $font-family;
 	font-size: $font-size;
@@ -55,7 +55,12 @@ body {
 	border: 5px solid #fff;
 }
 
-#game-background, #game-foreground {
+#game-background {
+	@extend .canvas-layer;
+	background-color: #000;
+}
+
+#game-foreground {
 	@extend .canvas-layer;
 }
 

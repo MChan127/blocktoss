@@ -14,9 +14,6 @@
 
 <link href='http://fonts.googleapis.com/css?family=Press+Start+2P' rel='stylesheet' type='text/css'>
 
-<!-- used to modularize the javascript files -->
-<script data-main="js/game.js" src="js/vendor/require.js"></script>
-
 <title>Block Toss - Created by Matthew Chan</title>
 
 </head>
@@ -45,5 +42,8 @@
 	</div>
 
 	</div>
+
+	<!-- used to modularize the javascript files -->
+	<script data-main="js/game.js" src="js/vendor/require.js"></script>
 </body>
 </html>
