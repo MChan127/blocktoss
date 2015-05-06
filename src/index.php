@@ -12,8 +12,6 @@
 
 <link href="css/style.css" rel="stylesheet">
 
-<script src="js/index.js"></script>
-
 <title>Block Toss - Created by Matthew Chan</title>
 
 </head>
@@ -39,5 +37,7 @@
 	</div>
 
 	</div>
+
+	<script src="js/index.js"></script>
 </body>
 </html>

@@ -12,7 +12,10 @@
 
 <link href="css/style.css" rel="stylesheet">
 
-<script src="js/game.js"></script>
+<link href='http://fonts.googleapis.com/css?family=Press+Start+2P' rel='stylesheet' type='text/css'>
+
+<!-- used to modularize the javascript files -->
+<script data-main="js/game.js" src="js/vendor/require.js"></script>
 
 <title>Block Toss - Created by Matthew Chan</title>
 
@@ -28,10 +31,13 @@
 		}
 	?>
 
-	<div id="wrapper" class="game-wrapper"> <!-- ultimate wrapper dictating the font family, size, background color, etc. -->
+	<div id="wrapper" class="game-page"> <!-- ultimate wrapper dictating the font family, size, background color, etc. -->
 
-	<div id="game" class="col-xs-6 col-xs-offset-3">
-		<canvas height="540"></canvas>
+	<div id="game-container">
+		<div id="canvas-wrapper">
+			<canvas id="game-background" width="540" height="540">Sorry, this web browser doesn't support HTML5 canvases.</canvas>
+			<canvas id="game-foreground" width="540" height="540"></canvas>
+		</div>
 	</div>
 
 	<div id="logout">

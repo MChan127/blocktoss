@@ -18,19 +18,45 @@ body {
 	font-size: $font-size;
 }
 
-.game-wrapper {
+.game-page {
 	background-color: #9C9C9C;
 	background-blend-mode: multiply;
 }
 
-#game {
-	border: 5px solid #fff;
-	background-color: #000;
+#game-container {
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+	-ms-flex-pack: center;
+	    -webkit-justify-content: center;
+	        justify-content: center;
+	-ms-flex-align: center;
+	    -webkit-align-items: center;
+	        align-items: center;
 
 	position: relative;
-	right: -80%;
+	right: -100%;
 
 	transition: all 1.2s;
+}
+
+#canvas-wrapper {
+	position: relative;
+	height: 552px;
+	width: 552px;
+	padding: 0;
+	margin: 0;
+}
+
+.canvas-layer {
+	position: absolute;
+	top: 0;
+	left: 0;
+	border: 5px solid #fff;
+}
+
+#game-background, #game-foreground {
+	@extend .canvas-layer;
 }
 
 #logout {
@@ -58,9 +84,7 @@ body {
 
 #playerNameInput {
 	display: -ms-flexbox;
-
 	display: -webkit-flex;
-
 	display: flex;
 	-ms-flex-align: center;
 	    -webkit-align-items: center;

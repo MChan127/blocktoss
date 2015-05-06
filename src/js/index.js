@@ -13,7 +13,7 @@ $(document).ready(function() {
 	});
 
 	$('#submitPlayerName').bind('click', function() {
-		loginPlayer($('#playerNameInput'), $('#playerName').val());
+		loginPlayer($('#playerNameInput'), $('#playerName').val().trim());
 	});
 });
 
