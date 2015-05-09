@@ -93,20 +93,19 @@ define(['game_logic/board', 'game_logic/block', 'game_logic/board_config'], func
 		// 		starting blocks)
 		// keeps calling itself until it finds a safe color for the block
 		function getNewColor(x, y, color, deferred) {
-			this.board.findMatchingBlocks(x, y, color, function(found) {
+			this.board.findMatchingBlocks(x, y, color)
+			.done(function() {
 				// if there are matching blocks with this color
 				// switch to the next color, and repeat the function call
-				if (found) {
-					console.log("true, disregard: " + color);
-					var nextColor = (color == 6) ? 0 : color+1;
-					console.log("try: " + nextColor);
-					getNewColor(x, y, nextColor, deferred);
-
+				//console.log("true, disregard: " + color);
+				var nextColor = (color == 6) ? 0 : color+1;
+				//console.log("try: " + nextColor);
+				getNewColor(x, y, nextColor, deferred);
+			})
+			.fail(function() {
 				// else, this is a safe color that doesn't result in matches
-				} else {
-					console.log("false, return: " + color);
-					deferred.resolve(color);
-				}
+				//console.log("false, return: " + color);
+				deferred.resolve(color);
 			});
 
 			return deferred.promise();

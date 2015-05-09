@@ -18,15 +18,30 @@ define(['game_logic/block', 'game_logic/board_config'], function(Block, BOARD_CO
 		}
 	}
 
+	// whenever a new block appears or player tosses a block (and it collides with the stack),
+	// check if any combos/chains ensue
+	board.prototype.calculateChain = function(x, y, color) {
+		// object keeping track of all chains+combos
+		var chain = [];
+
+		this.findMatchingBlocks(x, y, color, chain, function() {
+
+		});
+	}
+
 	// scan surrounding blocks to determine if there are at least two
 	// other blocks in contact that have the same color
 	// in total, we will have checked twelve tiles branching out from the original in the center
 	// uses callback to indicate found or not found, but also returns the positions of matching tiles
-	// (so as to notify the Board object how large of a combo the player has made, etc.)
-	board.prototype.findMatchingBlocks = function(x, y, color, callback) {
+	// (so as to notify the Board object how large of a combo the player has made, etc.) 
+	// @param chain: object that's continually passed throughout the callbacks
+	//		  and keeps track of all the chains up to this point, and the size of combo for each 
+	board.prototype.findMatchingBlocks = function(x, y, color, chain) {
+		var deferred = $.Deferred();
+
 		this.matches = [];
 
-		console.log("first degree--   x: " + x + ",   y: " + y);
+		//console.log("first degree--   x: " + x + ",   y: " + y);
 		// check northern block
 		if (y > 0) {
 
@@ -68,12 +83,19 @@ define(['game_logic/block', 'game_logic/board_config'], function(Block, BOARD_CO
 
 		// if more than two matching colored blocks, means we have at least a combo of 3
 		if (this.matches.length >= 2) {
-			callback(true);
-			return this.matches;
+			// if chain has not been declared/passed in, instantiate it here as an empty array
+			chain = (chain == null) ? [] : chain;
+			// add our newly found matches to the chain
+			chain.push(this.matches);
+
+			// found matches
+			deferred.resolve(chain);
 		} else {
-			callback(false);
-			return 0;
+			// did not find matches
+			deferred.reject(chain);
 		}
+
+		return deferred.promise();
 	}
 
 	// checks if there's a tile at this position
@@ -99,7 +121,7 @@ define(['game_logic/block', 'game_logic/board_config'], function(Block, BOARD_CO
 	//		headed north, check the tile east of this one)
 	// 3) a final block, opposite of 2)
 	board.prototype.checkSecondDegreeTile = function(x, y, direction, color) {
-		console.log("second degree--   x: " + x + ",   y: " + y + ",   direction: " + direction);
+		//console.log("second degree--   x: " + x + ",   y: " + y + ",   direction: " + direction);
 		if (direction == 'north') {
 			var nextTile1 = (y > 0) ? this.checkTileColor(x, y-1, color) : 0;
 			var nextTile2 = (x != BOARD_CONFIG.tilesAcross-1) ? this.checkTileColor(x+1, y, color) : 0;
@@ -144,7 +166,7 @@ define(['game_logic/block', 'game_logic/board_config'], function(Block, BOARD_CO
 			}
 		} else if (direction == 'west') {
 			var nextTile1 = (x > 0) ? this.checkTileColor(x-1, y, color) : 0;
-			var nextTile1 = (y > 0) ? this.checkTileColor(x, y-1, color) : 0;
+			var nextTile2 = (y > 0) ? this.checkTileColor(x, y-1, color) : 0;
 			var nextTile3 = (x != BOARD_CONFIG.tilesDown-1) ? this.checkTileColor(x, y+1, color) : 0;
 
 			if (nextTile1 != 0) {
@@ -157,6 +179,10 @@ define(['game_logic/block', 'game_logic/board_config'], function(Block, BOARD_CO
 				this.matches.push(nextTile3);
 			}
 		}
+	}
+
+	board.prototype.eraseMatchingBlocks = function(chain) {
+
 	}
 
 	return board;
