@@ -7,7 +7,7 @@ define(['game_logic/board', 'game_logic/block', 'game_logic/board_config'], func
 		var deferred = $.Deferred();
 
 		// create a new board
-		this.board = new Board();
+		this.board = new Board(mainScope);
 
 		// set the number of each size of column, from tallest to shortest (simply one block)
 		// all values should add up to the value of 'BOARD_CONFIG.tilesAcross', else will result in some empty columns
@@ -81,10 +81,7 @@ define(['game_logic/board', 'game_logic/block', 'game_logic/board_config'], func
 
 				// add this new Block Drawing to the renderer's queue (and therefore the canvas)
 				// use the foreground context
-				tempBlock.init(mainScope.renderer, mainScope.contexts[1], x, y);
-
-				// add to the Board's two-dimensional array
-				board.gameTiles[x][y] = tempBlock;
+				tempBlock.init(mainScope.renderer, board.gameTiles, mainScope.contexts[1], x, y);
 			});
 		}
 

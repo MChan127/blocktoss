@@ -34,7 +34,7 @@ $(document).ready(function() {
     	require(['game_logic/main'], function(main) {
     		// order of contexts in the array matters, because
     		// contexts are updated in order from left to right
-    		main.initGame([ctx_bg, ctx_fg], delay);
+    		main.initGame([ctx_bg, ctx_fg, ctx_player], delay);
     	});
     });
 });

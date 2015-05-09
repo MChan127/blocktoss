@@ -86,6 +86,7 @@ define(['game_logic/drawing'], function(Drawing) {
 
 				scope.renderer.clearContexts([scope.contexts[1]]);
 
+				// set up for a new game
 				scope.getNewGame();
 			}
 		}

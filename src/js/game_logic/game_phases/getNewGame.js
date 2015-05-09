@@ -1,4 +1,4 @@
-define(['game_logic/drawing', 'game_logic/generateBoard'], function(Drawing, generateBoard) {
+define(['game_logic/generateBoard'], function(generateBoard) {
 	var getNewGame = function() { 
 		this.board = null;
 		this.loading = setInterval(function() {
@@ -9,6 +9,9 @@ define(['game_logic/drawing', 'game_logic/generateBoard'], function(Drawing, gen
 			generateBoard(scope).done(function(newBoard) {
 				clearInterval(scope.loading);
 				scope.board = newBoard;
+
+				// start the actual game
+				scope.gameRunning();
 			});
 		}
 		initBoard(this);
