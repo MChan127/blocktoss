@@ -24,26 +24,6 @@ define([], function() {
 			this.drawings[canvasId] = [];
 		}
 
-		// add the new drawing into the array
-		// associated with its context
-		this.newDrawing = function(drawing) {
-			var canvasId = drawing.context.canvas.getAttribute('id');
-			this.drawings[canvasId].push(drawing);
-		}
-
-		// remove the drawing from the array
-		// associated with its context
-		this.removeDrawing = function(drawing) {
-			var canvasId = drawing.context.canvas.getAttribute('id');
-			this.drawings[canvasId].splice(this.drawings[context].indexOf(drawing), 1);
-		}
-
-		// toggle a specific context's redrawing status
-		this.setRedraw = function(context, status) {
-			var canvasId = context.canvas.getAttribute('id');
-			this.contexts[canvasId].redraw = status;
-		}
-
 		// initialize the loop
 		// the canvases are clear and redrawn at the rate specified by the 'delay'
 		// variable
@@ -61,36 +41,56 @@ define([], function() {
 			}, scope.delay);
 		}
 		init(this);
-
-		// clear the context and redraw each of its drawings, one by one
-		this.redraw = function(scope, id, context) {
-			context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-
-			// go through each drawing
-			for (var i in scope.drawings[id]) {
-				// get the drawing object (for convenience)
-				var drawing = scope.drawings[id][i];
-
-				context.save();
-				// set alpha to 0 if drawing is set to hidden (invisible)
-				// 1 if otherwise
-				context.globalAlpha = (drawing.hide) ? 0 : 1;
-				context.drawImage(drawing.img, drawing.x, drawing.y, drawing.width, drawing.height);
-				context.restore();
-			}
-		}
-
-		// remove all drawings from one or more contexts, then redraw
-		// usually called when transitioning from one game phase to another
-		this.clearContexts = function(contexts) {
-			for (var i in contexts) {
-				var canvasId = contexts[i].canvas.getAttribute('id');
-
-				this.drawings[canvasId].splice(0, this.drawings[canvasId].length);
-				this.setRedraw(contexts[i], true);
-			}
-		}
 	};
+
+	// add the new drawing into the array
+	// associated with its context
+	renderer.prototype.newDrawing = function(drawing) {
+		var canvasId = drawing.context.canvas.getAttribute('id');
+		this.drawings[canvasId].push(drawing);
+	}
+
+	// remove the drawing from the array
+	// associated with its context
+	renderer.prototype.removeDrawing = function(drawing) {
+		var canvasId = drawing.context.canvas.getAttribute('id');
+		this.drawings[canvasId].splice(this.drawings[context].indexOf(drawing), 1);
+	}
+
+	// toggle a specific context's redrawing status
+	renderer.prototype.setRedraw = function(context, status) {
+		var canvasId = context.canvas.getAttribute('id');
+		this.contexts[canvasId].redraw = status;
+	}
+
+	// clear the context and redraw each of its drawings, one by one
+	renderer.prototype.redraw = function(scope, id, context) {
+		context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+
+		// go through each drawing
+		for (var i in scope.drawings[id]) {
+			// get the drawing object (for convenience)
+			var drawing = scope.drawings[id][i];
+
+			context.save();
+			// set alpha to 0 if drawing is set to hidden (invisible)
+			// 1 if otherwise
+			context.globalAlpha = (drawing.hide) ? 0 : 1;
+			context.drawImage(drawing.img, drawing.x, drawing.y, drawing.width, drawing.height);
+			context.restore();
+		}
+	}
+
+	// remove all drawings from one or more contexts, then redraw
+	// usually called when transitioning from one game phase to another
+	renderer.prototype.clearContexts = function(contexts) {
+		for (var i in contexts) {
+			var canvasId = contexts[i].canvas.getAttribute('id');
+
+			this.drawings[canvasId].splice(0, this.drawings[canvasId].length);
+			this.setRedraw(contexts[i], true);
+		}
+	}
 
 	return renderer;
 });

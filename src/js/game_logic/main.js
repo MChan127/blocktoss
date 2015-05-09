@@ -6,8 +6,8 @@
 // also needs to access drawing.js objects which represent the individual 
 // sprites/graphics to be drawn and updated on the canvas
 
-define(['game_logic/renderer', 'game_logic/audio', 'game_logic/drawing', 'game_logic/game_phases/initGame', 'game_logic/game_phases/getTitle'], 
-	function(Renderer, audio, Drawing, initGame, getTitle) {
+define(['game_logic/renderer', 'game_logic/audio', 'game_logic/drawing', 'game_logic/game_phases/initGame', 'game_logic/game_phases/getTitle', 'game_logic/game_phases/getNewGame'], 
+	function(Renderer, audio, Drawing, initGame, getTitle, getNewGame) {
 
 	var main = {
 		renderer: null,
@@ -23,9 +23,7 @@ define(['game_logic/renderer', 'game_logic/audio', 'game_logic/drawing', 'game_l
 		getTitle: getTitle,
 		
 		// start a new game
-		getNewGame: function() {
-			
-		},
+		getNewGame: getNewGame,
 
 		// end the current game
 		getEndGame: function() {
