@@ -11,7 +11,7 @@ define(['game_logic/board', 'game_logic/block', 'game_logic/board_config'], func
 
 		// set the number of each size of column, from tallest to shortest (simply one block)
 		// all values should add up to the value of 'BOARD_CONFIG.tilesAcross', else will result in some empty columns
-		var columnCounts = [4, 4, 6, 4];
+		var columnCounts = [3, 3, 4, 3];
 
 		// create an array representing all the x-coordinates we have to choose from
 		// every time we insert a column, that index is removed from the array (so that we don't populate two
@@ -57,38 +57,59 @@ define(['game_logic/board', 'game_logic/block', 'game_logic/board_config'], func
 		* 6 = white
 		*/
 		function fillColumn(index, size) {
+			var colorImages = {
+				0: mainScope.images['red_block.png'],
+				1: mainScope.images['orange_block.png'],
+				2: mainScope.images['yellow_block.png'],
+				3: mainScope.images['green_block.png'],
+				4: mainScope.images['blue_block.png'],
+				5: mainScope.images['purple_block.png'],
+				6: mainScope.images['white_block.png']
+			}
+
 			// populate the column with Block objects
 			for (var i = 0; i < size; i++) {
-				var newColor = getNewColor(index, i, Math.floor(Math.random() * 7));
+				createBlock(this.board, colorImages, index, i);
+			}
+		}
 
-				var tempBlock = new Block('block', mainScope.images['block.png'], newColor);
+		function createBlock(board, colorImages, x, y) {
+			var deferred = $.Deferred();
+
+			getNewColor(x, y, Math.floor(Math.random() * 7), deferred).done(function(newColor) {
+				var tempBlock = new Block('block', colorImages[newColor], newColor);
 
 				// add this new Block Drawing to the renderer's queue (and therefore the canvas)
 				// use the foreground context
-				tempBlock.init(mainScope.renderer, mainScope.contexts[1], index, i);
+				tempBlock.init(mainScope.renderer, mainScope.contexts[1], x, y);
 
 				// add to the Board's two-dimensional array
-				this.board.gameTiles[index][i] = tempBlock;
-			}
+				board.gameTiles[x][y] = tempBlock;
+			});
 		}
 
 		// recursive function that returns a new color that doesn't result in existence of 
 		// three adjacent same-color blocks (because we don't want to generate combos/chains in our
 		// 		starting blocks)
 		// keeps calling itself until it finds a safe color for the block
-		function getNewColor(x, y, color) {
+		function getNewColor(x, y, color, deferred) {
 			this.board.findMatchingBlocks(x, y, color, function(found) {
 				// if there are matching blocks with this color
 				// switch to the next color, and repeat the function call
 				if (found) {
+					console.log("true, disregard: " + color);
 					var nextColor = (color == 6) ? 0 : color+1;
-					return getNewColor(x, y, nextColor);
+					console.log("try: " + nextColor);
+					getNewColor(x, y, nextColor, deferred);
 
 				// else, this is a safe color that doesn't result in matches
 				} else {
-					return color;
+					console.log("false, return: " + color);
+					deferred.resolve(color);
 				}
 			});
+
+			return deferred.promise();
 		}
 	}
 

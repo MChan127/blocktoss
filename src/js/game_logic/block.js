@@ -13,8 +13,8 @@ define(['game_logic/drawing', 'game_logic/board_config'], function(Drawing, BOAR
 	// to use for drawing on the canvas
 	// the width and height are based on a constant size for all blocks (taken from BOARD_CONFIG)
 	block.prototype.init = function(renderer, context, x, y) {
-		this.width = BOARD_CONFIG.fieldWidth / BOARD_CONFIG.tilesAcross;
-		this.height = BOARD_CONFIG.fieldHeight / BOARD_CONFIG.tilesDown;
+		this.width = Math.floor(BOARD_CONFIG.fieldWidth / BOARD_CONFIG.tilesAcross);
+		this.height = Math.floor(BOARD_CONFIG.fieldHeight / BOARD_CONFIG.tilesDown);
 		this.x = x * this.width;
 		this.y = y * this.height;
 		this.context = context;

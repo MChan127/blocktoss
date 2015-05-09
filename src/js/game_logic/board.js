@@ -24,100 +24,131 @@ define(['game_logic/block', 'game_logic/board_config'], function(Block, BOARD_CO
 	// uses callback to indicate found or not found, but also returns the number of matching tiles
 	// (so as to notify the Board object how large of a combo the player has made, etc.)
 	board.prototype.findMatchingBlocks = function(x, y, color, callback) {
-		var matches = 0;
+		this.matches = 0;
 
-		// console.log("x: " + x + ",   y: " + y);
+		console.log("first layer--   x: " + x + ",   y: " + y);
 		// check northern block
-		var nextTile = this.gameTiles[x][y-1];
-		if (nextTile != 0 && nextTile != undefined) {
-			if (nextTile.color == color) {
-				matches++;
-				checkSecondLayer(x, y-1, 'north');
+		if (y > 0) {
+
+			var nextTile = this.gameTiles[x][y-1];
+			if (nextTile != 0) {
+				if (nextTile.color == color) {
+					this.matches++;
+					checkSecondLayer(this, x, y-1, 'north');
+				}
 			}
+
 		}
 		// check eastern block
 		if (x != BOARD_CONFIG.tilesAcross-1) {
 
 			var nextTile = this.gameTiles[x+1][y];
-			if (nextTile != 0 && nextTile != undefined) {
+			if (nextTile != 0) {
 				if (nextTile.color == color) {
-					matches++;
-					checkSecondLayer(x+1, y, 'north');
+					this.matches++;
+					checkSecondLayer(this, x+1, y, 'north');
 				}
 			}
 
 		}
 		// check southern block
-		var nextTile = this.gameTiles[x][y+1];
-		if (nextTile != 0 && nextTile != undefined) {
-			if (nextTile.color == color) {
-				matches++;
-				checkSecondLayer(x, y+1, 'north');
+		if (y != BOARD_CONFIG.tilesDown-1) {
+
+			var nextTile = this.gameTiles[x][y+1];
+			if (nextTile != 0) {
+				if (nextTile.color == color) {
+					this.matches++;
+					checkSecondLayer(this, x, y+1, 'north');
+				}
 			}
+
 		}
 		// check western block
-		if (x != 0) {
+		if (x > 0) {
 
 			var nextTile = this.gameTiles[x-1][y];
-			if (nextTile != 0 && nextTile != undefined) {
+			if (nextTile != 0) {
 				if (nextTile.color == color) {
-					matches++;
-					checkSecondLayer(x-1, y, 'north');
+					this.matches++;
+					checkSecondLayer(this, x-1, y, 'north');
 				}
 			}
 
 		}
 
+		console.log("matches: " + this.matches);
+
 		// if more than two matching colored blocks, means we have at least a combo of 3
-		if (matches > 2) {
+		if (this.matches >= 2) {
 			callback(true);
-			return matches;
+			return this.matches;
+		} else {
+			callback(false);
+			return 0;
 		}
 
-		// given a block adjacent to the original, check two more blocks
+		// given a block adjacent to the original, check three more blocks relative to this new block
 		// 1) one block continuing in the original direction
 		// 2) another block going 90-degrees clockwise from this direction (so if originally
 		//		headed north, check the tile east of this one)
-		function checkSecondLayer(x, y, direction) {
+		// 3) a final block, opposite of 2)
+		function checkSecondLayer(scope, x, y, direction) {
+			console.log("second layer--   x: " + x + ",   y: " + y);
 			if (direction == 'north') {
-				var nextTile1 = this.gameTiles[x][y-1];
-				var nextTile2 = this.gameTiles[x+1][y];
+				var nextColor1 = (y > 0) ? scope.gameTiles[x][y-1].color : -1;
+				var nextColor2 = (x != BOARD_CONFIG.tilesAcross-1) ? scope.gameTiles[x+1][y].color : -1;
+				var nextColor3 = (x > 0) ? scope.gameTiles[x-1][y].color : -1;
 
-				if (nextTile1 != undefined && nextTile1 != 0) {
-					matches = (nextTile1.color == color) ? matches+1 : matches;
+				if (nextColor1 != 0) {
+					scope.matches = (nextColor1 == color) ? scope.matches+1 : scope.matches;
 				}
-				if (nextTile2 != undefined && nextTile2 != 0) {
-					matches = (nextTile2.color == color) ? matches+1 : matches;
+				if (nextColor2 != 0) {
+					scope.matches = (nextColor2 == color) ? scope.matches+1 : scope.matches;
+				}  
+				if (nextColor3 != 0) {
+					scope.matches = (nextColor3 == color) ? scope.matches+1 : scope.matches;
 				}
 			} else if (direction == 'east') {
-				var nextTile1 = this.gameTiles[x+1][y];
-				var nextTile2 = this.gameTiles[x][y+1];
+				var nextColor1 = (x != BOARD_CONFIG.tilesAcross-1) ? scope.gameTiles[x+1][y].color : -1;
+				var nextColor2 = (y != BOARD_CONFIG.tilesDown-1) ? scope.gameTiles[x][y+1].color : -1;
+				var nextColor3 = (y > 0) ? scope.gameTiles[x][y-1].color : -1;
 				
-				if (nextTile1 != undefined && nextTile1 != 0) {
-					matches = (nextTile1.color == color) ? matches+1 : matches;
+				if (nextColor1 != 0) {
+					scope.matches = (nextColor1 == color) ? scope.matches+1 : scope.matches;
 				}
-				if (nextTile2 != undefined && nextTile2 != 0) {
-					matches = (nextTile2.color == color) ? matches+1 : matches;
+				if (nextColor2 != 0) {
+					scope.matches = (nextColor2 == color) ? scope.matches+1 : scope.matches;
+				}
+				if (nextColor3 != 0) {
+					scope.matches = (nextColor3 == color) ? scope.matches+1 : scope.matches;
 				}
 			} else if (direction == 'south') {
-				var nextTile1 = this.gameTiles[x][y+1];
-				var nextTile2 = this.gameTiles[x-1][y];
+				var nextColor1 = (y != BOARD_CONFIG.tilesDown-1) ? scope.gameTiles[x][y+1].color : -1;
+				var nextColor2 = (x > 0) ? scope.gameTiles[x-1][y].color : -1;
+				var nextColor3 = (x != BOARD_CONFIG.tilesAcross-1) ? scope.gameTiles[x+1][y].color : -1;
 				
-				if (nextTile1 != undefined && nextTile1 != 0) {
-					matches = (nextTile1.color == color) ? matches+1 : matches;
+				if (nextColor1 != 0) {
+					scope.matches = (nextColor1 == color) ? scope.matches+1 : scope.matches;
 				}
-				if (nextTile2 != undefined && nextTile2 != 0) {
-					matches = (nextTile2.color == color) ? matches+1 : matches;
+				if (nextColor2 != 0) {
+					scope.matches = (nextColor2 == color) ? scope.matches+1 : scope.matches;
+				}
+				if (nextColor3 != 0) {
+					scope.matches = (nextColor3 == color) ? scope.matches+1 : scope.matches;
 				}
 			} else if (direction == 'west') {
-				var nextTile1 = this.gameTiles[x-1][y];
-				var nextTile2 = this.gameTiles[x][y-1];
+				var nextColor1 = (x > 0) ? scope.gameTiles[x-1][y].color : -1;
+				var nextColor2 = (y > 0) ? scope.gameTiles[x][y-1].color : -1;
+				var nextColor3 = (y != BOARD_CONFIG.tilesDown-1) ? scope.gameTiles[x][y+1].color : -1;
 				
-				if (nextTile1 != undefined && nextTile1 != 0) {
-					matches = (nextTile1.color == color) ? matches+1 : matches;
+				if (nextColor1 != 0) {
+					scope.matches = (nextColor1 == color) ? scope.matches+1 : scope.matches;
 				}
-				if (nextTile2 != undefined && nextTile2 != 0) {
-					matches = (nextTile2.color == color) ? matches+1 : matches;
+				if (nextColor2 != 0) {
+					scope.matches = (nextColor2 == color) ? scope.matches+1 : scope.matches;
+				}
+				if (nextColor3 != 0) {
+					scope.matches = (nextColor3 == color) ? scope.matches+1 : scope.matches;
 				}
 			}
 		}

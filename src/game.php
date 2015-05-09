@@ -32,8 +32,8 @@
 
 	<div id="game-container">
 		<div id="canvas-wrapper">
-			<canvas id="game-background" width="540" height="540">Sorry, this web browser doesn't support HTML5 canvases.</canvas>
-			<canvas id="game-foreground" width="540" height="540"></canvas>
+			<canvas id="game-background" width="520" height="540">Sorry, this web browser doesn't support HTML5 canvases.</canvas>
+			<canvas id="game-foreground" width="520" height="540"></canvas>
 		</div>
 	</div>
 
