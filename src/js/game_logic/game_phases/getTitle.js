@@ -20,7 +20,7 @@ define(['game_logic/drawing'], function(Drawing) {
 				this.images['space_bg2.png'],
 				this.images['space_bg3.png'],
 				this.images['space_bg4.png'],
-			], 500);
+			], 500, false);
 
 		// create the title text and menu options
 		var title = new Drawing('title', this.images['title.png']);
@@ -63,7 +63,7 @@ define(['game_logic/drawing'], function(Drawing) {
 				this.images['start_arrow4.png'],
 				this.images['start_arrow3.png'],
 				this.images['start_arrow2.png'],
-			], 30);
+			], 30, false);
 
 		// listen for user input
 		function listenUserInput(scope) {

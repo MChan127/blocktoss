@@ -54,7 +54,7 @@ define([], function() {
 	// associated with its context
 	renderer.prototype.removeDrawing = function(drawing) {
 		var canvasId = drawing.context.canvas.getAttribute('id');
-		this.drawings[canvasId].splice(this.drawings[context].indexOf(drawing), 1);
+		this.drawings[canvasId].splice(this.drawings[canvasId].indexOf(drawing), 1);
 	}
 
 	// toggle a specific context's redrawing status
@@ -77,6 +77,7 @@ define([], function() {
 			// 1 if otherwise
 			context.globalAlpha = (drawing.hide) ? 0 : 1;
 			context.drawImage(drawing.img, drawing.x, drawing.y, drawing.width, drawing.height);
+
 			context.restore();
 		}
 	}

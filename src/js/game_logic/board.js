@@ -7,6 +7,8 @@ define(['game_logic/block', 'game_logic/board_config'], function(Block, BOARD_CO
 		// renderer object used throughout this entire game session
 		// this Board object needs the renderer in order to add/delete/manipulate Block objects
 		this.renderer = mainScope.renderer;
+		// object containing all images used for the game
+		this.images = mainScope.images;
 
 		// create the 2D array containing all Blocks in the game
 		this.gameTiles = new Array();
@@ -65,6 +67,7 @@ define(['game_logic/block', 'game_logic/board_config'], function(Block, BOARD_CO
 			var newBlock = new Block('block', colorImages[newColor], newColor);
 			newBlock.init(scope.renderer, scope.gameTiles, contexts[1], currentX, 0);
 
+			scope.calculateChain(currentX, 0, newColor, scope);
 		}, BOARD_CONFIG.gameSpeed);
 	}
 
@@ -72,7 +75,7 @@ define(['game_logic/block', 'game_logic/board_config'], function(Block, BOARD_CO
 	// check if any combos/chains ensue
 	// recursively calls eraseMoveScan() if chains continue to occur, until no more matches are found
 	// then calculateChain() returns a promise
-	board.prototype.calculateChain = function(x, y, color) {
+	board.prototype.calculateChain = function(x, y, color, board) {
 		var deferred = $.Deferred();
 
 		// object keeping track of all chains+combos
@@ -81,7 +84,7 @@ define(['game_logic/block', 'game_logic/board_config'], function(Block, BOARD_CO
 		this.findMatchingBlocks(x, y, color, chain)
 		// if matches are found, erase these blocks (but keep the chain obj)
 		.done(function(newChain) {
-			eraseMoveScan(this, deferred, newChain);
+			eraseMoveScan(deferred, newChain);
 		})
 		// if no more matches are found, there is no chain so resolve the promise
 		.fail(function() {
@@ -89,20 +92,21 @@ define(['game_logic/block', 'game_logic/board_config'], function(Block, BOARD_CO
 		});
 
 		// scope object contains the Board functions eraseMatchingBlocks() and fallBlocks()
-		function eraseMoveScan(scope, deferred, chain) {
-			scope.eraseMatchingBlocks(chain)
+		function eraseMoveScan(deferred, chain) {
+			board.eraseMatchingBlocks(chain)
 
 			// after erasing, drop the floating blocks that are in the air
 			// pass in chain obj because findMatchingBlocks() will be performed on each of the 
 			// fallen blocks, and we can continue to append to the chain in each case
 			.done(function(fallRanges) {
-				scope.fallBlocks(fallRanges);
+				board.fallBlocks(fallRanges);
 			})
 
 			// after falling all the blocks and scanning them, 
 			// if the scans have found more matching blocks, recursively call eraseMoveScan()
 			.done(function(newChain) {
-				eraseMoveScan(scope, deferred, newChain);
+				//eraseMoveScan(deferred, newChain);
+				deferred.resolve(chain);
 			})
 
 			// if no more matches are found, the chain ends here
@@ -127,6 +131,8 @@ define(['game_logic/block', 'game_logic/board_config'], function(Block, BOARD_CO
 		var deferred = $.Deferred();
 
 		var matches = [];
+		// include the original block
+		matches.push({x: x, y: y});
 
 		//console.log("first degree--   x: " + x + ",   y: " + y);
 		// check northern block
@@ -168,8 +174,8 @@ define(['game_logic/block', 'game_logic/board_config'], function(Block, BOARD_CO
 
 		//console.log("min combo: " + BOARD_CONFIG.minCombo);
 
-		// if two or more matching color blocks found, means we have at least a combo of 3
-		if (matches.length >= BOARD_CONFIG.minCombo-1) {
+		// if three or more matching color blocks found, means we have at least a combo of 3
+		if (matches.length >= BOARD_CONFIG.minCombo) {
 			// if chain has not been declared/passed in, instantiate it here as an empty array
 			chain = (chain == null) ? [] : chain;
 			// add our newly found matches to the chain
@@ -273,6 +279,7 @@ define(['game_logic/block', 'game_logic/board_config'], function(Block, BOARD_CO
 	// erase the latest set of matching color blocks from the field
 	board.prototype.eraseMatchingBlocks = function(chain) {
 		var deferred = $.Deferred();
+		var blocksErased = 0;
 
 		// array containing positions of latest matching color blocks
 		var matches = chain[chain.length-1];
@@ -288,27 +295,48 @@ define(['game_logic/block', 'game_logic/board_config'], function(Block, BOARD_CO
 
 			// get the Block object
 			var blockObj = this.gameTiles[currentX][currentY];
-			// remove it from the field
-			blockObj.remove(this.renderer);
-
-			// update minimum and maximum y coordinates of erased blocks for every column
-			if (fallRanges[currentX].min == null) {
-				fallRanges[currentX].min = currentY;
-			} else {
-				fallRanges[currentX].min = (currentY < fallRanges[currentX].min) ? 
-					currentY : fallRanges[currentX].min;
-			}
-
-			if (fallRanges[currentX].max == null) {
-				fallRanges[currentX].max = currentY;
-			} else {
-				fallRanges[currentX].max = (currentY > fallRanges[currentX].max) ? 
-					currentY : fallRanges[currentX].max;
-			}
-
+			
+			eraseBlock(blockObj, this.images, currentX, currentY, this.renderer);
 		}
 
-		deferred.resolve(fallRanges);
+		function eraseBlock(blockObj, images, currentX, currentY, renderer) {
+			blockObj.addAnimation(renderer,
+			[
+				images['erase_block1.png'],
+				images['erase_block2.png'],
+				images['erase_block3.png'],
+				images['erase_block4.png'],
+				images['erase_block5.png'],
+				images['erase_block6.png'],
+				images['erase_block7.png'],
+				images['erase_block8.png'],
+				images['erase_block9.png'],
+				images['erase_block10.png'],
+				images['erase_block11.png'],
+				images['erase_block12.png']
+			], 15, true, removeBlock);
+
+			function removeBlock() {
+				// remove it from the field
+				blockObj.remove(renderer);
+
+				// update minimum and maximum y coordinates of erased blocks for every column
+				if (fallRanges[currentX] == null) {
+					fallRanges[currentX] = {min: currentY, max: currentY};
+				} else {
+					fallRanges[currentX].min = (currentY < fallRanges[currentX].min) ? 
+						currentY : fallRanges[currentX].min;
+
+					fallRanges[currentX].max = (currentY > fallRanges[currentX].max) ? 
+						currentY : fallRanges[currentX].max;
+				}
+
+				if (++blocksErased == matches.length) {
+					deferred.resolve(fallRanges);
+				}
+			}
+		}
+
 		return deferred.promise();
 	}
 

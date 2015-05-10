@@ -52,11 +52,17 @@ define([], function() {
 	// user can specify a rate of 'frame' traversal in the form of
 	// the 'delay' parameter
 	// this function can also be used to replace the current image with another, still image
-	drawing.prototype.addAnimation = function(renderer, images, delay) {
+	// @param finite: if true, animation runs once then runs a callback
+	drawing.prototype.addAnimation = function(renderer, images, delay, finite, callback) {
 		this.images = images;
 		this.delay = delay;
 		this.frame = 0;
-		this.animate(this, renderer);
+
+		if (!finite) {
+			this.animate(this, renderer);
+		} else {
+			this.animateOnce(this, renderer, callback);
+		}
 	}
 	drawing.prototype.animate = function(scope, renderer) {
 		scope.animation = setInterval(function() {
@@ -67,14 +73,29 @@ define([], function() {
 			}
 		}, scope.delay);
 	}
-	drawing.prototype.removeAnimation = function(renderer, img) {
+	drawing.prototype.animateOnce = function(scope, renderer, callback) {
+		scope.animation = setInterval(function() {
+			scope.img = scope.images[scope.frame++];
+			renderer.setRedraw(scope.context, true);
+			if (scope.frame >= scope.images.length) {
+				scope.removeAnimation(renderer, null, callback);
+			}
+		}, scope.delay);
+	}
+	drawing.prototype.removeAnimation = function(renderer, newImg, callback) {
 		clearInterval(this.animation);
 		// optionally, assign this drawing to a new image
 		// after stopping the animation
 		// else it will be assigned to the original
-		if (img) {
-			this.img = img;
+		if (newImg) {
+			this.img = newImg;
 		}
+
+		// if callback specified, run it
+		if (callback != null && callback != undefined) {
+			callback();
+		}
+
 		renderer.setRedraw(this.context, true);
 	}
 	/** END | special functions for animating the drawing **/
