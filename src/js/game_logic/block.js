@@ -32,6 +32,12 @@ define(['game_logic/drawing', 'game_logic/board_config'], function(Drawing, BOAR
 		gameTiles[x][y] = this;
 	}
 
+	// retrieve x-y coordinates not based in pixels or the Canvas, but the Board object's
+	// 2D array indexes
+	block.prototype.getTileCoordinates = function() {
+		return {x: Math.floor(this.x / this.width), y: Math.floor(this.y / this.height)};
+	}
+
 	// move the drawing
 	block.prototype.moveTo = function(x, y, renderer, gameTiles) {
 		// update the board

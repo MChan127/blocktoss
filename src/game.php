@@ -41,6 +41,10 @@
 		<a href="logout.php">Log Out</a>
 	</div>
 
+	<div id="logout" style="position: relative; top: -80px;">
+		<a id="pause" href="#">Pause/Go</a>
+	</div>
+
 	</div>
 
 	<!-- used to modularize the javascript files -->

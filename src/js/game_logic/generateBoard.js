@@ -90,7 +90,7 @@ define(['game_logic/board', 'game_logic/block', 'game_logic/board_config'], func
 		// 		starting blocks)
 		// keeps calling itself until it finds a safe color for the block
 		function getNewColor(x, y, color, deferred) {
-			this.board.findMatchingBlocks(x, y, color)
+			this.board.findMatchingBlocks([{x: x, y: y, color: color}], this.board)
 			.done(function() {
 				// if there are matching blocks with this color
 				// switch to the next color, and repeat the function call
