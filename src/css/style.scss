@@ -25,13 +25,10 @@ body {
 
 #game-container {
 	display: -ms-flexbox;
-	display: -webkit-flex;
 	display: flex;
 	-ms-flex-pack: center;
-	    -webkit-justify-content: center;
 	        justify-content: center;
 	-ms-flex-align: center;
-	    -webkit-align-items: center;
 	        align-items: center;
 
 	position: relative;
@@ -89,10 +86,8 @@ body {
 
 #playerNameInput {
 	display: -ms-flexbox;
-	display: -webkit-flex;
 	display: flex;
 	-ms-flex-align: center;
-	    -webkit-align-items: center;
 	        align-items: center;
 
 	height: 225px;
@@ -110,13 +105,10 @@ body {
 
 #playerNameInput > div {
 	display: -ms-flexbox;
-	display: -webkit-flex;
 	display: flex;
 	-ms-flex-pack: center;
-	    -webkit-justify-content: center;
 	        justify-content: center;
 	-ms-flex-align: center;
-	    -webkit-align-items: center;
 	        align-items: center;
 }
 

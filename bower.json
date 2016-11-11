@@ -1,7 +1,12 @@
 {
-    "name": "blockToss",
+    "name": "block.toss",
     "version": "0.0.1",
-    "description": "A simple puzzle game akin to Tetris but upside-down. The player moves a cursor left and right at the bottom and throws tiles/blocks at the generating blocks above. Three attached tiles of identical color (doesn't have to be a straight line, just touching) will cause the tiles to erase.",
+    "description": "A simple puzzle game akin to Tetris but upside-down.",
+    "dependencies": {
+        "jquery": "*",
+        "handlebars": "*",
+        "bootstrap": "*"
+    },
     "ignore": [
         "**/.*",
         "node_modules",
